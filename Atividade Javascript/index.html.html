@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Exercícios Interativos</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 30px; }
+  h2 { margin-top: 40px; }
+  input { width: 50px; padding: 5px; margin: 5px; }
+  input.invalido { border: 2px solid red; background-color: #fdd; }
+  .mensagem { color: red; margin-top: 10px; }
+  .resultado { margin-top: 20px; font-weight: bold; }
+  /* Exercício 2: fundo azul e letras maiores */
+  #ex2 { background-color: #87CEFA; padding: 15px; font-size: 18px; border-radius: 5px; }
+  #ex2 input { width: 60px; }
+</style>
+</head>
+<body>
+
+<!-- ====================== Exercício 1 ====================== -->
+<section id="ex1">
+<h2>Exercício 1: Calculadora de Média</h2>
+
+<label>Nota 1:</label><input type="number" id="nota1" min="0" max="10"><br>
+<label>Nota 2:</label><input type="number" id="nota2" min="0" max="10"><br>
+<label>Nota 3:</label><input type="number" id="nota3" min="0" max="10"><br><br>
+
+<button onclick="calcularMedia()">Calcular Média</button>
+<div class="mensagem" id="mensagem1"></div>
+<div class="resultado" id="resultado1"></div>
+</section>
+
+<!-- ====================== Exercício 2 ====================== -->
+<section id="ex2">
+<h2>Exercício 2: Controle de Estoque</h2>
+
+<div id="produtosInputs"></div>
+<button onclick="calcularEstoque()">Registrar Estoque</button>
+<div class="mensagem" id="mensagem2"></div>
+<div class="resultado" id="resultado2"></div>
+</section>
+
+<!-- ====================== Exercício 3 ====================== -->
+<section id="ex3">
+<h2>Exercício 3: Validador de Ingressos</h2>
+
+<img src="https://via.placeholder.com/200x300.png?text=Filme+16+" id="filmeImg" style="display:block; margin-bottom:10px;">
+<div id="idadesInputs"></div>
+<button onclick="validarIngressos()">Verificar Ingressos</button>
+<div class="mensagem" id="mensagem3"></div>
+</section>
+
+<script>
+// ====================== Exercício 1 ======================
+function calcularMedia() {
+  const notas = [];
+  let todosValidos = true;
+  const mensagem = document.getElementById("mensagem1");
+  mensagem.textContent = "";
+
+  for (let i = 1; i <= 3; i++) {
+    const input = document.getElementById(`nota${i}`);
+    const valor = parseFloat(input.value);
+
+    if (isNaN(valor) || valor < 0 || valor > 10) {
+      input.classList.add("invalido");
+      todosValidos = false;
+    } else {
+      input.classList.remove("invalido");
+      notas.push(valor);
+    }
+  }
+
+  if (!todosValidos) {
+    mensagem.textContent = "⚠️ Atenção: Digite todas as notas entre 0 e 10!";
+    document.getElementById("resultado1").textContent = "";
+    return;
+  }
+
+  const media = calcularMediaFunc(notas);
+  document.getElementById("resultado1").textContent = `🎉 Parabéns! A média é ${media.toFixed(2)}`;
+}
+
+function calcularMediaFunc(notas) {
+  return notas.reduce((a, b) => a + b, 0) / notas.length;
+}
+
+// ====================== Exercício 2 ======================
+// Criar 5 inputs para produtos
+const produtosDiv = document.getElementById("produtosInputs");
+for (let i = 1; i <= 5; i++) {
+  const label = document.createElement("label");
+  label.textContent = `Produto ${i}: `;
+  const input = document.createElement("input");
+  input.type = "number";
+  input.min = "0";
+  input.id = `produto${i}`;
+  produtosDiv.appendChild(label);
+  produtosDiv.appendChild(input);
+  produtosDiv.appendChild(document.createElement("br"));
+}
+
+function calcularEstoque() {
+  const quantidades = [];
+  let todosValidos = true;
+  const mensagem = document.getElementById("mensagem2");
+  mensagem.textContent = "";
+
+  for (let i = 1; i <= 5; i++) {
+    const input = document.getElementById(`produto${i}`);
+    const valor = parseInt(input.value);
+
+    if (isNaN(valor) || valor < 0) {
+      input.style.border = "2px solid red";
+      input.style.backgroundColor = "#fdd";
+      todosValidos = false;
+    } else {
+      input.style.border = "";
+      input.style.backgroundColor = "";
+      quantidades.push(valor);
+    }
+  }
+
+  if (!todosValidos) {
+    mensagem.textContent = "⚠️ Atenção: Digite valores inteiros positivos para todos os produtos!";
+    document.getElementById("resultado2").textContent = "";
+    return;
+  }
+
+  const total = somarQuantidades(quantidades);
+  document.getElementById("resultado2").textContent = `✅ Total de itens em estoque: ${total} \nLista de produtos: ${quantidades.join(", ")}`;
+}
+
+function somarQuantidades(quantidades) {
+  return quantidades.reduce((a, b) => a + b, 0);
+}
+
+// ====================== Exercício 3 ======================
+// Criar inputs para 4 pessoas
+const idadesDiv = document.getElementById("idadesInputs");
+for (let i = 1; i <= 4; i++) {
+  const label = document.createElement("label");
+  label.textContent = `Idade pessoa ${i}: `;
+  const input = document.createElement("input");
+  input.type = "number";
+  input.min = "0";
+  input.id = `idade${i}`;
+  idadesDiv.appendChild(label);
+  idadesDiv.appendChild(input);
+  idadesDiv.appendChild(document.createElement("br"));
+}
+
+function validarIngressos() {
+  const mensagem = document.getElementById("mensagem3");
+  mensagem.textContent = "";
+  let img = document.getElementById("filmeImg");
+  img.style.filter = ""; // reset
+
+  let todosValidos = true;
+
+  for (let i = 1; i <= 4; i++) {
+    const input = document.getElementById(`idade${i}`);
+    const idade = parseInt(input.value);
+
+    if (isNaN(idade) || idade < 0) {
+      input.style.border = "2px solid red";
+      input.style.backgroundColor = "#fdd";
+      todosValidos = false;
+    } else {
+      input.style.border = "";
+      input.style.backgroundColor = "";
+      if (idade < 16) {
+        todosValidos = false;
+      }
+    }
+  }
+
+  if (!todosValidos) {
+    mensagem.textContent = "⚠️ Algumas pessoas não podem assistir ao filme (menores de 16 anos ou entrada inválida)";
+    img.style.filter = "grayscale(100%) blur(2px)";
+  } else {
+    mensagem.textContent = "🎬 Todas as pessoas podem assistir ao filme!";
+  }
+}
+</script>
+
+</body>
+</html>
